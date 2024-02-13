@@ -10,8 +10,9 @@ import { FontAwesome6 } from '@expo/vector-icons';
 import { useSafeAreaFrame } from 'react-native-safe-area-context';
 import { MaterialIcons } from '@expo/vector-icons';
 import axios from 'axios';
+import { useNavigation } from '@react-navigation/native';
 
-const Register = () => {
+const Register = ({props}) => {
 
 
     const [name,setName] = useState('') ;
@@ -24,22 +25,44 @@ const Register = () => {
     const [passwordVerify,setPasswordVerify] = useState(false) ;
     const [showPassword, setShowPassword] = useState(false);
 
-// handle submit 
-function handleSubmit()
-{
+    const navigation = useNavigation() ;
 
-    console.log("Register Button Clicked")
-    const userData = {
-        name: name,
-        email:email,
-        mobile:mobile,
-        password:password
+// handle submit 
+async function handleSubmit() {
+  //console.log("Register Button Clicked");
+  const userData = {
+      name: name,
+      email: email,
+      mobile,
+      password
+  };
+  //console.log(userData);
+  try {
+
+
+    if(nameVerify && emailVerify && mobileVerify && passwordVerify)
+    {
+      const response = await axios.post("https://authbackend-j3h5.onrender.com/register", userData);
+      console.log(response.data);
+      if(response.data.status === "ok")
+      {
+        Alert.alert("Registration Successful");
+        navigation.navigate("Login");
+
+      }
+      else{
+        Alert.alert(JSON.stringify(response.data)); ;
+      }
     }
-    axios
-         .post("http://192.168.1.3:3000/register" , userData)
-         .then((res) => console.log(res.data))
-         .catch(e=>console.log(e)) ;
+   
+} catch (error) {
+    console.log('Error Status:', error.response?.status);
+    console.log('Error Data:', error.response?.data);
+    console.log('Error Headers:', error.response?.headers);
 }
+
+}
+
 
 
 

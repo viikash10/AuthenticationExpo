@@ -1,5 +1,5 @@
 import { Alert, Image, SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
-import React from 'react'
+import React, { useState } from 'react'
 import styles from './style.js'
 
 import { AntDesign } from '@expo/vector-icons';
@@ -7,18 +7,42 @@ import { EvilIcons } from '@expo/vector-icons';
 import { ScrollView } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
+import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 const Login = () => {
 
-  const handleSubmit = () => {
-    Alert.alert("Login Successful");
-  }
+  
   const navigation = useNavigation() ;
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const handleSubmit = () => {
+    console.log(email,password) ;
+    const userData = {
+        email: email,
+        password
+    }
+    axios.post("URL",userData).then((res)=>
+    {
+      console.log(res.data) ;
+      if(res.status === "ok")
+      {
+      Alert.alert("Login Successful");
+      AsyncStorage.setItem('token',res.data.data)
+        navigation.navigate('Home') ;
+      }
+    }) ;
+  }
+
+  
 
   return (
     <ScrollView
     contentContainerStyle={{flexGrow: 1}}
-    keyboardShouldPersistTaps={'always'}>
+    keyboardShouldPersistTaps={'always'}
+    >
     <View style={{backgroundColor: 'white'}}>
       <View style={styles.logoContainer}>
         <Image
@@ -38,7 +62,7 @@ const Login = () => {
           <TextInput
             placeholder="Mobile or Email"
             style={styles.textInput}
-            //onChange={e => setEmail(e.nativeEvent.text)}
+            onChange={e => setEmail(e.nativeEvent.text)}
           />
         </View>
         <View style={styles.action}>
@@ -46,7 +70,7 @@ const Login = () => {
           <TextInput
             placeholder="Password"
             style={styles.textInput}
-            // onChange={e => setPassword(e.nativeEvent.text)}
+            onChange={e => setPassword(e.nativeEvent.text)}
           />
         </View>
         <View
