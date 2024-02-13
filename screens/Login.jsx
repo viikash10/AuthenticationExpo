@@ -24,7 +24,7 @@ const Login = () => {
         email: email,
         password
     }
-    axios.post("URL",userData).then((res)=>
+    axios.post("https://authbackend-zovm.onrender.com/login-user",userData).then((res)=>
     {
       console.log(res.data) ;
       if(res.status === "ok")

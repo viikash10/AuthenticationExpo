@@ -42,7 +42,7 @@ async function handleSubmit() {
 
     if(nameVerify && emailVerify && mobileVerify && passwordVerify)
     {
-      const response = await axios.post("https://authbackend-j3h5.onrender.com/register", userData);
+      const response = await axios.post("https://authbackend-zovm.onrender.com/register", userData);
       console.log(response.data);
       if(response.data.status === "ok")
       {
